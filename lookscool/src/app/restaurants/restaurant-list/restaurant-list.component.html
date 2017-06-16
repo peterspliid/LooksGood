@@ -1,0 +1,27 @@
+<div class="row">
+  <div class="col-md-5">
+    <h2>Restaurants</h2>
+    <ul class="list-group">
+      <li class="list-group-item"
+        *ngFor="let restaurant of restaurants"
+        (click)="selectRestaurant(restaurant)"
+        [class.active]="restaurant === selectedRestaurant">
+        {{restaurant.name}}
+      </li>
+    </ul>
+    <button class="btn btn-warning" (click)="createNewRestaurant()">New</button>
+  </div>
+  <div class="col-md-5 col-md-offset-2">
+    <restaurant-details
+      [restaurant]="selectedRestaurant"
+      [createHandler]="addRestaurant"
+      [updateHandler]="updateRestaurant"
+      [deleteHandler]="deleteRestaurant">
+    </restaurant-details>
+    <br>
+    <image-details
+      [restaurant]="selectedRestaurant"
+      [image]="selectedImage">
+    </image-details>
+  </div>
+</div>

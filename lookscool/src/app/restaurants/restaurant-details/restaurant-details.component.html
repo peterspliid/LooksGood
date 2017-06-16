@@ -1,0 +1,25 @@
+<div *ngIf="restaurant" class="row">
+  <div class="col-md-12">
+    <h2 *ngIf="restaurant._id">Restaurant Details</h2>
+    <h2 *ngIf="!restaurant._id">New Restaurant</h2>
+  </div>
+</div>
+<div *ngIf="restaurant" class="row">
+  <form class="col-md-12">
+    <div class="form-group">
+      <label for="restaurant-name">Name</label>
+      <input class="form-control" name="restaurant-name" [(ngModel)]="restaurant.name" placeholder="Name"/>
+    </div>
+    <div class="form-group">
+      <label for="restaurant-coordinates-x">X coordinate</label>
+      <input type="number" class="form-control" name="restaurant-coordinates-x" [(ngModel)]="restaurant.coordinates.x" placeholder=0/>
+    </div>
+    <div class="form-group">
+      <label for="restaurant-coordinates-y">Y coordinate</label>
+      <input type="number" class="form-control" name="restaurant-coordinates-y" [(ngModel)]="restaurant.coordinates.y" placeholder=0/>
+    </div>
+    <button class="btn btn-primary" *ngIf="!restaurant._id" (click)="createRestaurant(restaurant)">Create</button>
+    <button class="btn btn-info" *ngIf="restaurant._id" (click)="updateRestaurant(restaurant)">Update</button>
+    <button class="btn btn-danger" *ngIf="restaurant._id" (click)="deleteRestaurant(restaurant._id)">Delete</button>
+  </form>
+</div>

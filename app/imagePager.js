@@ -18,14 +18,9 @@ export default class ImagePagerScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      widths: 0,
-      heights: 0,
+      index: 1,
     }
     this.params = this.props.navigation.state.params;
-  }
-
-  componentDidMount() {
-    
   }
 
    _keyExtractor = (item, index) => item._id;
@@ -40,9 +35,13 @@ export default class ImagePagerScreen extends Component {
       </View>
     );
   }
-
+  _onLayout(event) {
+    console.log(this.params.index);
+    this.list.scrollToIndex({index: this.params.index, animated: false})
+  }
   render() {
     return (
+      <View onLayout={(event) => this._onLayout(event)} style={{flex: 1}}>
       <FlatList
         ref={el => this.list = el}
         data={this.params.imgList}
@@ -51,13 +50,12 @@ export default class ImagePagerScreen extends Component {
         horizontal={true}
         pagingEnabled={true}
         showsHorizontalScrollIndicator={false}
-        initialNumToRender={1}
         getItemLayout={(data, index) => (
           {length: dim.width, offset: dim.width * index, index}
         )}
-        initialScrollIndex={3}
       />
-    );
+      </View>
+    )
   }
 }
 

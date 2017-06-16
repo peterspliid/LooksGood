@@ -13,6 +13,7 @@ import {
   Button,
 } from 'react-native';
 import { StackNavigator } from 'react-navigation';
+import ImageThumbnail from './imageThumbnail';
 
 export default class ImageCarousel extends Component {
   constructor(props) {
@@ -45,15 +46,18 @@ export default class ImageCarousel extends Component {
   }
   _keyExtractor = (item, index) => item._id + index;
 
-  _renderImage = ({item}) => (
-    //{/*<TouchableHighlight onPress={() => this.props.moveMap(item.name_ID)}>*/}
-    <TouchableHighlight onPress={() => this.props.navigation.navigate('SingleImage', {image: item})} >
-    <Image
-      source={{uri: "http://lookscool.herokuapp.com"+item.link}}
-      style={styles.img}
-    />
-    </TouchableHighlight>
+  _renderImage({item}) {
+    return (
+      <View style={styles.thumbnail}>
+        <ImageThumbnail
+          navigation={this.props.navigation}
+          restList={this.props.restList}
+          image={item}
+          height={100}
+          width={100}/>
+      </View>
     );
+  }
 
   _loadMore = () => this.setState({imgList: this.state.imgList.concat(this.state.imgList)});
 
@@ -116,12 +120,10 @@ export default class ImageCarousel extends Component {
 }
 
 const styles = StyleSheet.create({
-  img: {
-    width: 100,
-    height: 100,
+  thumbnail: {
     marginBottom: 10,
     marginTop: 10,
     marginRight: 5,
     marginLeft: 5,
-  },
-})
+  }
+});

@@ -14,6 +14,10 @@ import {Text,
 const dim = Dimensions.get('window');
 
 export default class SingleImageScreen extends Component {
+  static navigationOptions = ({navigation}) => ({
+    title: navigation.state.params.restName,
+  });
+
   constructor(props) {
     super(props);
 
@@ -57,9 +61,6 @@ export default class SingleImageScreen extends Component {
     });
   }
 
-  static navigationOptions = ({navigation}) => ({
-    title: navigation.state.params.image.link,
-  });
   render() {
     if (this.state.isLoading) {
       return (

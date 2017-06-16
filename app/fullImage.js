@@ -16,7 +16,7 @@ export default class FullImage extends Component {
     };
   }
 
-  _onLayout(event) {
+  componentDidMount() {
     const containerWidth = Dimensions.get('window').width;
     Image.getSize(this.props.source, (width, height) => {
       this.setState({
@@ -24,6 +24,10 @@ export default class FullImage extends Component {
         height: containerWidth * height / width
       });
     });
+  }
+
+  _onLayout(event) {
+    
   }
 
   render() {

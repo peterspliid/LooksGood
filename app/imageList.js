@@ -20,10 +20,10 @@ export default class ImageList extends Component {
     });
   }
 
-  renderImage(image) {
+  renderImage(image, sectionID, rowID) {
   return(
     <TouchableOpacity
-      onPress={() => this.props.navigation.navigate('ImagePager', {imgList: this.props.imageList})}>
+      onPress={() => this.props.navigation.navigate('ImagePager', {imgList: this.props.imageList, index: rowID})}>
       <Image
         source={{uri: "http://lookscool.herokuapp.com"+image.link}}
         style={styles.img}/>
@@ -35,7 +35,7 @@ export default class ImageList extends Component {
     return (
       <ListView
         dataSource={this.state.imageList}
-        renderRow={(image) => this.renderImage(image)}
+        renderRow={(image, sectionID, rowID) => this.renderImage(image, sectionID, rowID)}
         contentContainerStyle={styles.list}/>
     )
   }

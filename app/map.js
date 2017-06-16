@@ -1,19 +1,17 @@
 import React, { Component } from 'react';
 import MapView from 'react-native-maps';
-import { StackNavigator } from 'react-navigation';
+import { StackNavigator, DrawerNavigator } from 'react-navigation';
 import {
   StyleSheet,
   Dimensions,
   ActivityIndicator,
   View,
   Text,
+  Image,
   TouchableHighlight,
 } from 'react-native';
-import RestaurantScreen from './restaurant';
 import ImageCarousel from './imageCarousel';
-import SingleImageScreen from './singleImage';
-import MapSingleScreen from './mapSingle'
-import ImagePagerScreen from './imagePager'
+import MapNavigationBar from './mapNavigationBar';
 const { width, height } = Dimensions.get('window');
 
 const ASPECT_RATIO = width / height;
@@ -25,7 +23,8 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const screen = Dimensions.get('window');
 
 class MapScreen extends Component {
-  constructor(props) {
+
+  constructor(props, {navigation}) {
     super(props);
     this.state = {
       region: {
@@ -38,11 +37,9 @@ class MapScreen extends Component {
       restaurantList: [],
     }
     this.markers = [];
+    console.log(this.props);
   }
 
-  static navigationOptions = ({
-    header: null,
-  });
 
   componentDidMount() {
     fetch('http://lookscool.herokuapp.com/api/restaurants')
@@ -77,67 +74,64 @@ class MapScreen extends Component {
     };
     this.markers = [];
     return (
-      <View style={styles.layout}>
-      <MapView
-        ref={ref => { this.map = ref; }}
-        initialRegion={this.state.region}
-        onRegionChange={this.onRegionChange}
-        style={styles.map}
-      >
-      {this.state.restaurantList.map(restaurant =>
+      <View style={{flex: 1}}>
+        <View style={styles.layout}>
+        <MapView
+          ref={ref => { this.map = ref; }}
+          initialRegion={this.state.region}
+          onRegionChange={this.onRegionChange}
+          style={styles.map}
+        >
+        {this.state.restaurantList.map(restaurant =>
+          <MapView.Marker
+            ref={el => this.markers[restaurant._id] = el}
+            key={restaurant._id}
+            title={restaurant.name}
+            identifier={restaurant._id}
+            coordinate={{
+              latitude: restaurant.coordinates.x,
+              longitude: restaurant.coordinates.y,
+            }}
+            onPress={() => this.props.navigation.navigate('Restaurant', {rest: restaurant})}
+            image={require('../img/restaurant-icon.png')}
+            style={styles.icon}
+          />
+        )}
         <MapView.Marker
-          ref={el => this.markers[restaurant._id] = el}
-          key={restaurant._id}
-          title={restaurant.name}
-          identifier={restaurant._id}
           coordinate={{
-            latitude: restaurant.coordinates.x,
-            longitude: restaurant.coordinates.y,
+            latitude: 55.660418,
+            longitude: 12.591845,
           }}
-          onPress={() => this.props.navigation.navigate('Restaurant', {rest: restaurant})}
-          image={require('../img/restaurant-icon.png')}
-          style={styles.icon}
+          image={require('../img/icecream-icon.png')}
+          onPress={() => this.props.navigation.navigate('Restaurant', {rest: icecream})} >
+        </MapView.Marker>
+        </MapView>
+        <ImageCarousel
+          style={styles.carousel}
+          navigation={this.props.navigation}
+          restList={this.state.restaurantList}
         />
-      )}
-      <MapView.Marker
-        coordinate={{
-          latitude: 55.660418,
-          longitude: 12.591845,
-        }}
-        image={require('../img/icecream-icon.png')}
-        onPress={() => this.props.navigation.navigate('Restaurant', {rest: icecream})} >
-      </MapView.Marker>
-      </MapView>
-      <ImageCarousel
-        moveMap={(ID) => this.moveMap(ID)}
-        style={styles.carousel}
-        navigation={this.props.navigation}
-        moveMap={this.moveMap}
-      />
       </View>
+      <View style={styles.navBar}>
+      <MapNavigationBar
+        navigation={this.props.navigation}/>
+      </View>
+    </View>
     );
   }
 }
 
-const MapStack = StackNavigator({
-  Map: {
-    screen: MapScreen,
-  },
-  Restaurant: {
-    screen: RestaurantScreen,
-  },
-  SingleImage: {
-    screen: SingleImageScreen,
-  },
-  MapSingle: {
-    screen: MapSingleScreen,
-  },
-  ImagePager: {
-    screen: ImagePagerScreen,
-  },
-});
 
 const styles = StyleSheet.create({
+  navBar: {
+    top: 20,
+    marginLeft: 20,
+    marginRight: 20,
+    width: width-40,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    position: 'absolute',
+  },
   carousel: {
     flexDirection: 'column',
     justifyContent: 'flex-end',
@@ -161,4 +155,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MapStack;
+export default MapScreen;
